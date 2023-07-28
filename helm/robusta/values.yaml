@@ -431,11 +431,22 @@ kubewatch:
   annotations: {}
   nodeSelector: ~
 
+# Configures the Pod Security Context in robusta runner
+# https://kubernetes.io/docs/tasks/configure-pod-container/security-context
+podSecurityContext: {}
+
 # parameters for the renderer service used in robusta runner to render grafana graphs
 grafanaRenderer:
   enableContainer: false
   image: us-central1-docker.pkg.dev/genuine-flight-317411/devel/grafana-renderer:7
   imagePullPolicy: IfNotPresent
+  # Configures the Container Security Context
+  # https://kubernetes.io/docs/tasks/configure-pod-container/security-context
+  securityContext:
+    allowPrivilegeEscalation: false
+    capabilities: {}
+    privileged: false
+    readOnlyRootFilesystem: false
   resources:
     requests:
       cpu: 100m
@@ -451,6 +462,10 @@ runner:
   sentry_dsn: https://53b627690db14de7b02095407596fa16@o1120648.ingest.sentry.io/6156573
   sendAdditionalTelemetry: false
   certificate: "" # base64 encoded
+  # Configures the Container Security Context
+  # https://kubernetes.io/docs/tasks/configure-pod-container/security-context
+  securityContext:
+    privileged: false
   resources:
     requests:
       cpu: 250m

@@ -21,15 +21,14 @@ spec:
     spec:
       serviceAccountName: {{ .Release.Name }}-runner-service-account
       automountServiceAccountToken: {{ .Values.automountServiceAccountToken }}
+      securityContext:
+￼       {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
       - name: runner
         image: {{ .Values.runner.image }}
         imagePullPolicy: {{ .Values.runner.imagePullPolicy }}
         securityContext:
-          allowPrivilegeEscalation: false
-          capabilities: {}
-          privileged: false
-          readOnlyRootFilesystem: false
+          {{- toYaml .Values.controller.manager.securityContext | nindent 12 }}
         env:
           - name: PLAYBOOKS_CONFIG_FILE_PATH
             value: /etc/robusta/config/active_playbooks.yaml
@@ -95,7 +94,7 @@ spec:
         image: {{ .Values.grafanaRenderer.image }}
         imagePullPolicy: {{ .Values.grafanaRenderer.imagePullPolicy }}
         securityContext:
-          privileged: false
+          {{- toYaml .Values.controller.manager.securityContext | nindent 12 }}
         lifecycle:
           preStop:
             exec:
